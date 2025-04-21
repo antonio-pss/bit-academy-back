@@ -28,8 +28,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     # Our apss
-    "bit_main"
-
+    "bit_main",
 ]
 
 MIDDLEWARE = [
@@ -64,21 +63,21 @@ TEMPLATES = [
 WSGI_APPLICATION = "bit_academy.wsgi.application"
 
 AUTH_PASSWORD_VALIDATORS = [
-     {
-         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-     },
-     {
-         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-     },
-     {
-         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-     },
-     {
-         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-     },
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
-DATABASES = {"default": dj_database_url.config(default=os.getenv('DATABASE_URL'))}
+DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
 LANGUAGE_CODE = "en-us"
 

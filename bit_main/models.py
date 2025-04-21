@@ -13,15 +13,8 @@ class ModelBase(models.Model):
 
 
 class User(ModelBase):
-    id_user = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False)
-    username = models.CharField(
-        MinLengthValidator(6),
-        max_length=12,
-        unique=True
-    )
+    id_user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    username = models.CharField(MinLengthValidator(6), max_length=12, unique=True)
     name = models.CharField(max_length=30)
     email = models.EmailField(
         max_length=150,
