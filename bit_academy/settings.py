@@ -15,8 +15,6 @@ if ENVIROMENT != "production":
     else:
         raise FileNotFoundError(f"Arquivo de ambiente '{ENV_FILE}' não encontrado.")
 
-SECRET_KEY = os.getenv("SECRET_KEY", "123456")
-DEBUG = os.getenv("DEBUG", "True") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 INSTALLED_APPS = [
@@ -80,7 +78,7 @@ AUTH_PASSWORD_VALIDATORS = [
      },
 ]
 
-DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
+DATABASES = {"default": dj_database_url.config(default=os.getenv('DATABASE_URL'))}
 
 LANGUAGE_CODE = "en-us"
 
