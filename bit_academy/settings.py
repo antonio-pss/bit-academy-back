@@ -1,19 +1,26 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
+from django.conf.global_settings import SECRET_KEY
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIROMENT = os.getenv("DJANGO_ENV", "development")
-if ENVIROMENT != "production":
+ENVIRONMENT = os.getenv("DJANGO_ENV", "development")
+
+if ENVIRONMENT == "production":
+    pass
+else:
     ENV_FILE = ".env.development"
     env_path = BASE_DIR / ENV_FILE
     if env_path.exists():
         load_dotenv(env_path)
     else:
         raise FileNotFoundError(f"Arquivo de ambiente '{ENV_FILE}' não encontrado.")
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
@@ -26,6 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Other apps
     "rest_framework",
+    'rest_framework_simplejwt',
     "drf_yasg",
     # Our apss
     "bit_main",
@@ -77,7 +85,28 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
+# # To production environment
+# DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
+
+# To development environment
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv('ENGINE_DB'),
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
+    }
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 
 LANGUAGE_CODE = "en-us"
 
@@ -96,3 +125,32 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+AUTH_USER_MODEL = 'bit_main.User'
+
+
+MINIO_ENDPOINT = "http://localhost:9000"
+MINIO_ACCESS_KEY = "minioadmin"
+MINIO_SECRET_KEY = "minioadmin"
+MINIO_BUCKET = "date-media"
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=24),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
