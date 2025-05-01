@@ -8,6 +8,7 @@ done
 
 # Aplica migrações para atualizar o banco.
 echo "Aplicando migrações..."
+python manage.py makemigrations
 python manage.py migrate
 
 # Coleta arquivos estáticos.

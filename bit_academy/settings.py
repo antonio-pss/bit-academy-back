@@ -16,6 +16,8 @@ if ENVIROMENT != "production":
         raise FileNotFoundError(f"Arquivo de ambiente '{ENV_FILE}' não encontrado.")
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
