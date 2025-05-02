@@ -22,7 +22,6 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-for-dev-only'
 if SECRET_KEY == 'django-insecure-fallback-key-for-dev-only' and not DEBUG:
     raise ValueError("SECRET_KEY must be set in production environment variables!")
 
-
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 # --- Aplicações Instaladas ---
