@@ -16,7 +16,7 @@ bit-academy-back/
 │   ├── urls.py           # Rotas principais
 │   ├── wsgi.py           # Interface WSGI para servidores
 │   ├── asgi.py           # Interface ASGI para WebSockets
-│── bit_main/             # App principal com regras de negócio e modelos compartilhados
+│── core/             # App principal com regras de negócio e modelos compartilhados
 │── bit_school/           # Funcionalidades para gestão escolar
 │── bit_class/            # Ambiente de ensino semelhante ao Google Classroom
 │── bit_notes/            # Plataforma de anotações inteligentes e flashcards
