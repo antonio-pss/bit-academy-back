@@ -1,7 +1,7 @@
 from django.conf import settings
 from minio import Minio
 
-from .implementations.minio_storage import MinioAvatarStorage
+from .implementations.minio_storage import MinioStorage
 
 
 def get_storage_service():
@@ -16,4 +16,4 @@ def get_storage_service():
         secure=settings.MINIO_SECURE
     )
 
-    return MinioAvatarStorage(minio_client)
+    return MinioStorage(minio_client)

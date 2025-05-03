@@ -48,7 +48,7 @@ class UserDetailViewsets(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
-class LogoutView(APIView):
+class LogoutViewsets(APIView):
     serializer_class = serializers.LogoutSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
