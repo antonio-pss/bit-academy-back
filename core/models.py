@@ -1,7 +1,9 @@
-
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
+
+from core.managers import UserManager
 
 
 class ModelBase(models.Model):
@@ -83,6 +85,8 @@ class User(ModelBase, AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    objects = UserManager()
 
     class Meta:
         managed = True
