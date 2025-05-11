@@ -12,7 +12,11 @@ class InstitutionRole(ModelBase):
 
 
 class Institution(ModelBase):
-    name = models.CharField(max_length=50, db_column="tx_name", )
+    name = models.CharField(
+        max_length=50,
+        db_column="tx_name",
+        default='without_institutional_link'
+    )
 
     class Meta:
         managed = True
@@ -52,7 +56,7 @@ class Course(ModelBase):
 
 
 class Module(ModelBase):
-    name = models.CharField(max_length=50, db_column="tx_name", )
+    name = models.CharField(max_length=50, db_column="tx_name", default='default')
 
     class Meta:
         managed = True

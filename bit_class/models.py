@@ -15,10 +15,24 @@ class Class(ModelBase):
 
 
 class ClassRole(ModelBase):
-    name = models.CharField(max_length=50, db_column="tx_name", )
+    ROLE_CHOICES = (
+        ('TCHR', 'Teacher'),
+        ('STD', 'Student'),
+        ('PRIN', 'Principal'),
+        ('TRN', 'Trainee')
+    )
+    role = models.CharField(
+        null=False,
+        max_length=4,
+        choices=ROLE_CHOICES,
+        db_column="tx_role",
+        unique=True,
+        default='STD',
+    )
 
     class Meta:
         managed = True
+        ordering = ['role']
         db_table = 'class_role'
 
 
