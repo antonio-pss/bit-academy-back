@@ -5,25 +5,18 @@ from core import models
 from core import actions
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
-    confirm_password = serializers.CharField(write_only=True, required=True)
-    email = serializers.EmailField(required=True)
     name = serializers.CharField(required=True, max_length=30)
+    email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True, max_length=20)
+    password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = models.User
-        fields = ('email', 'name', 'username', 'password', 'confirm_password')
+        fields = ('email', 'name', 'username', 'password')
         extra_kwargs = {
             'password': {'write_only': True},
-            'confirm_password': {'write_only': True}
         }
 
-    def validate(self, attrs):
-        actions.UserActions.validate_password_strength(attrs['password'])
-        actions.UserActions.validate_password_match(attrs['password'], attrs['confirm_password'])
-        attrs.pop('confirm_password')
-        return attrs
 
     def create(self, validated_data):
         user = actions.UserActions.create_user(validated_data)
