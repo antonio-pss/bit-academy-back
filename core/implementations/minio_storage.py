@@ -19,7 +19,6 @@ class MinioStorage:
 
     def store_file(self, file: BinaryIO, path: str) -> str:
         try:
-            # Obtém o tamanho do arquivo
             file.seek(0, 2)  # Vai para o final do arquivo
             size = file.tell()
             file.seek(0)     # Volta ao início

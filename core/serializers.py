@@ -72,12 +72,21 @@ class CustomSocialLoginSerializer(serializers.Serializer):
         return validated_data
 
 
-class UserAvatarUploadSerializer(serializers.Serializer):
-    avatar = serializers.ImageField()
+class MinionStorageSerializer(serializers.Serializer):
+    file = serializers.FileField()
+    filename = serializers.CharField()
+    class_id = serializers.IntegerField()
+
+    def validate(self, attrs):
+        if not attrs.get('file'):
+            raise serializers.ValidationError("File is required.")
+        if not attrs.get('filename'):
+            raise serializers.ValidationError("Filename is required.")
+        if not attrs.get('class_id'):
+            raise serializers.ValidationError("Class ID is required.")
+        return attrs
 
 
 class ClassFileUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
     filename = serializers.CharField()
-
-

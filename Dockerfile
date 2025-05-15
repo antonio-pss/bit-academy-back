@@ -1,21 +1,31 @@
-# Base image
-FROM python:3.13-alpine
+# Dockerfile para projeto Django usando Alpine Linux
 
-# Set environment variables for python
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+# Imagem base com Python
+FROM python:3.10-alpine
 
-# Set the working directory inside the container
+# Variáveis de ambiente para otimização
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Instala dependências do sistema usando apk (Alpine)
+RUN apk add --no-cache \
+    build-base \
+    libpq \
+    && apk add --no-cache --virtual .build-deps gcc musl-dev
+
+# Diretório de trabalho
 WORKDIR /app
 
-# Copy the requirements.txt file into the container
-COPY ./requirements.txt .
+# Copia o requirements e instala os pacotes Python
+COPY requirements.txt /app/
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt
 
-# Install Python dependecies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copia todo o código do projeto para dentro do container
+COPY . /app/
 
-# Copy the rest of the project code into the container
-COPY . .
+# Expondo a porta padrão do Django
+EXPOSE 8000
 
-# Use the entrypoint script as the CMD
-CMD ["/app/entrypoint.sh"]
+# Comando padrão: aplica migrations e inicia o servidor de desenvolvimento
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"]
