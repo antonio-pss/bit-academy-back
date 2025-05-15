@@ -142,7 +142,7 @@ class ClassInvitation(ModelBase):
         on_delete=models.CASCADE,
         related_name='invitations'
     )
-    role = models.ForeignKey(
+    id_class_role = models.ForeignKey(
         'ClassRole',
         db_column='fk_role',
         on_delete=models.CASCADE

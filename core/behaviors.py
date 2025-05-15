@@ -8,7 +8,7 @@ def upload_user_avatar(user, avatar_file):
     avatar_path = storage.store_avatar(avatar_file, user.id)
     avatar_url = storage.get_avatar_url(avatar_path)
     user.avatar = avatar_path
-    user.save(update_fields=['avatar'])  # ou incluir outros campos conforme necessário
+    user.save(update_fields=['avatar'])
     return avatar_url
 
 def upload_class_file(file, filename, class_id):

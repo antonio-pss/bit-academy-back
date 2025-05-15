@@ -1,4 +1,3 @@
-# actions.py
 from django.db import transaction
 
 from bit_class.models import Class, ClassMember, ClassInvitation, ClassRole
@@ -52,7 +51,7 @@ class ClassActions:
             return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
     @staticmethod
-    def aceitar_convite(request, convite_id):
+    def accept_invitation(request, convite_id):
         from rest_framework.response import Response
         from rest_framework import status
         conv = ClassInvitation.objects.filter(id=convite_id, email=request.user.email).first()
@@ -68,7 +67,7 @@ class ClassActions:
         return Response({"error": "Convite inválido ou já aceito."}, status=status.HTTP_400_BAD_REQUEST)
 
     @staticmethod
-    def adicionar_estudante_link(request, class_obj, email):
+    def add_student_link(request, class_obj, email):
         from rest_framework.response import Response
         from rest_framework import status
         user = User.objects.filter(email=email).first()
@@ -81,12 +80,13 @@ class ClassActions:
             return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
     @staticmethod
-    def remover_estudante(request, class_obj, user_id):
+    def remove_student(request, class_obj, user_id):
         from rest_framework.response import Response
         from rest_framework import status
-        membro = ClassMember.objects.filter(id_class=class_obj, id_user=user_id,
-                                            id_class_role__name='Estudante').first()
-        if membro:
-            membro.delete()
+        member = ClassMember.objects.filter(
+            id_class=class_obj, id_user=user_id,
+            id_class_role__name='Estudante').first()
+        if member:
+            member.delete()
             return Response({"detail": "Estudante removido."})
         return Response({"error": "Estudante não encontrado na sala."}, status=status.HTTP_404_NOT_FOUND)

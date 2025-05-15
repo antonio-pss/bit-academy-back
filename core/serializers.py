@@ -6,23 +6,19 @@ from core import actions
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
-    confirm_password = serializers.CharField(write_only=True, required=True)
     email = serializers.EmailField(required=True)
     name = serializers.CharField(required=True, max_length=30)
     username = serializers.CharField(required=True, max_length=20)
 
     class Meta:
         model = models.User
-        fields = ('email', 'name', 'username', 'password', 'confirm_password')
+        fields = ('email', 'name', 'username', 'password')
         extra_kwargs = {
             'password': {'write_only': True},
-            'confirm_password': {'write_only': True}
         }
 
     def validate(self, attrs):
         actions.UserActions.validate_password_strength(attrs['password'])
-        actions.UserActions.validate_password_match(attrs['password'], attrs['confirm_password'])
-        attrs.pop('confirm_password')
         return attrs
 
     def create(self, validated_data):
@@ -33,8 +29,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'email', 'name', 'username', 'xp', 'streak', 'bio', 'avatar', 'is_active', 'date_joined']
+        fields = '__all__'
         read_only_fields = ['email', 'is_active', 'date_joined', 'id', 'xp', 'streak']
+        write_only_fields = ['password']
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -78,6 +75,9 @@ class CustomSocialLoginSerializer(serializers.Serializer):
 class UserAvatarUploadSerializer(serializers.Serializer):
     avatar = serializers.ImageField()
 
+
 class ClassFileUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
     filename = serializers.CharField()
+
+

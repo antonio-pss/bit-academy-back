@@ -17,7 +17,7 @@ class ClassMemberSerializer(serializers.ModelSerializer):
 class ClassInvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassInvitation
-        fields = ['id', 'email', 'id_class', 'role', 'is_accepted']
+        fields = ['id', 'email', 'id_class', 'id_class_role', 'is_accepted']
 
 
 class AssignRoleSerializer(serializers.Serializer):
@@ -38,5 +38,14 @@ class ClassInvitationResponseSerializer(serializers.Serializer):
 
 class ClassInvitationDeleteSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+
+class ClassInvitationAcceptSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    is_accepted = serializers.BooleanField(default=True)
+    role_id = serializers.PrimaryKeyRelatedField(queryset=ClassRole.objects.all())
+    class Meta:
+        model = ClassInvitation
+        fields = ['email', 'is_accepted', 'role_id']
 
 

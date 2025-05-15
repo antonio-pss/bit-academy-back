@@ -1,7 +1,5 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from guardian.shortcuts import assign_perm
-from rest_framework.response import Response
 from bit_class.models import Class
 from .serializers import ClassSerializer
 from . import actions
@@ -11,7 +9,6 @@ class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
 
     def perform_create(self, serializer):
-        # chama o método estático para criar a sala e atribuir permissões
         actions.ClassActions.perform_create(serializer, self.request.user)
 
     @action(detail=True, methods=['post'])

@@ -1,4 +1,3 @@
-# bit_academy/settings.py
 import os
 from datetime import timedelta
 from pathlib import Path
@@ -18,7 +17,6 @@ else:
 ENVIRONMENT = os.getenv("DJANGO_ENV", "development")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-# Função para validar variáveis essenciais
 def validar_env_var(var, default=None, obrigatorio=True):
     valor = os.getenv(var, default)
     if obrigatorio and valor is None:
@@ -27,7 +25,6 @@ def validar_env_var(var, default=None, obrigatorio=True):
             raise RuntimeError(f"Variável obrigatória '{var}' não definida em produção.")
     return valor
 
-# --- Secret key ---
 SECRET_KEY = validar_env_var('SECRET_KEY', 'django-insecure-fallback-key-for-dev-only')
 if SECRET_KEY == 'django-insecure-fallback-key-for-dev-only' and not DEBUG:
     raise ValueError("SECRET_KEY deve ser definido em variáveis de ambiente em produção!")
@@ -122,7 +119,7 @@ else:
             'USER': validar_env_var('POSTGRES_USER', 'local_user'),
             'PASSWORD': validar_env_var('POSTGRES_PASSWORD', 'local_password'),
             'HOST': validar_env_var('POSTGRES_HOST', 'localhost'),
-            'PORT': validar_env_var('POSTGRES_PORT', '5432'),
+            'PORT': validar_env_var('POSTGRES_PORT', '5433'),
         }
     }
 

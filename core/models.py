@@ -54,7 +54,7 @@ class User(ModelBase, AbstractUser):
         blank=False,
         null=False,
     )
-    password = models.TextField(
+    password = models.CharField(
         MinLengthValidator(8),
         blank=False,
         null=False,
@@ -95,7 +95,7 @@ class User(ModelBase, AbstractUser):
 class Image(ModelBase):
     image_url = models.URLField(
         db_column='image',
-        null=False,
+        null=True,
         blank=True
     )
 
