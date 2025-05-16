@@ -87,6 +87,6 @@ class UserService:
             user.avatar = avatar_path
             user.save()
             return self.storage.get_avatar_url(avatar_path)
-        except StorageError as e:
+        except DatabaseError as e:
             logger.error(f"Erro ao atualizar avatar: {str(e)}")
             raise
