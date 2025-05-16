@@ -3,6 +3,7 @@ from typing import BinaryIO, Optional
 from urllib.parse import urlparse
 
 from django.conf import settings
+from django.db import DatabaseError
 from minio import Minio
 from minio.error import S3Error
 
@@ -26,7 +27,7 @@ class MinioUploaderService:
         try:
             if not self.client.bucket_exists(bucket_name):
                 self.client.make_bucket(bucket_name)
-        except S3Error as e:
+        except S3Error:
             # Log ou tratamento de erro
             raise
 
@@ -87,6 +88,6 @@ class UserService:
             user.avatar = avatar_path
             user.save()
             return self.storage.get_avatar_url(avatar_path)
-        except StorageError as e:
+        except DatabaseError as e:
             logger.error(f"Erro ao atualizar avatar: {str(e)}")
             raise

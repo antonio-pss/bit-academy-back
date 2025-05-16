@@ -1,5 +1,6 @@
 import logging
 from typing import BinaryIO
+
 from django.conf import settings
 from minio import Minio
 

@@ -1,7 +1,8 @@
-
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
+
+from core.managers import UserManager
 
 
 class ModelBase(models.Model):
@@ -53,7 +54,7 @@ class User(ModelBase, AbstractUser):
         blank=False,
         null=False,
     )
-    password = models.TextField(
+    password = models.CharField(
         MinLengthValidator(8),
         blank=False,
         null=False,
@@ -84,6 +85,8 @@ class User(ModelBase, AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    objects = UserManager()
+
     class Meta:
         managed = True
         db_table = 'user'
@@ -92,7 +95,7 @@ class User(ModelBase, AbstractUser):
 class Image(ModelBase):
     image_url = models.URLField(
         db_column='image',
-        null=False,
+        null=True,
         blank=True
     )
 

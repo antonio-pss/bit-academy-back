@@ -1,40 +1,19 @@
-# bit_academy/settings.py
 import os
 from datetime import timedelta
 from pathlib import Path
+
 import dj_database_url
 from dotenv import load_dotenv
-import sys
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENV_FILE = ".env.development"
-env_path = BASE_DIR / ENV_FILE
-if env_path.exists():
-    load_dotenv(dotenv_path=env_path)
-else:
-    print(f"Warning: Environment file '{env_path}' não encontrado.")
+load_dotenv(BASE_DIR / ".env.development")
 
 ENVIRONMENT = os.getenv("DJANGO_ENV", "development")
 DEBUG = os.getenv("DEBUG", "True") == "True"
+SECRET_KEY = os.getenv("SECRET_KEY", "123456")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
-# Função para validar variáveis essenciais
-def validar_env_var(var, default=None, obrigatorio=True):
-    valor = os.getenv(var, default)
-    if obrigatorio and valor is None:
-        print(f"Warning: Variável de ambiente '{var}' não está definida.")
-        if not DEBUG:
-            raise RuntimeError(f"Variável obrigatória '{var}' não definida em produção.")
-    return valor
-
-# --- Secret key ---
-SECRET_KEY = validar_env_var('SECRET_KEY', 'django-insecure-fallback-key-for-dev-only')
-if SECRET_KEY == 'django-insecure-fallback-key-for-dev-only' and not DEBUG:
-    raise ValueError("SECRET_KEY deve ser definido em variáveis de ambiente em produção!")
-
-ALLOWED_HOSTS = validar_env_var("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-
-# --- Aplicações Instaladas ---
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -59,7 +38,6 @@ INSTALLED_APPS = [
     "bit_school",
 ]
 
-# --- Middleware ---
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -75,14 +53,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "bit_academy.urls"
 
-# --- Autenticação ---
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 AUTH_USER_MODEL = 'core.User'
 
-# --- Templates ---
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -101,7 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "bit_academy.wsgi.application"
 
-# --- Validadores de Senha ---
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
@@ -109,24 +84,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
-# --- Banco de Dados ---
-if ENVIRONMENT == "production":
-    DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"), conn_max_age=600)}
-else:
-    # Variáveis de ambiente para o banco de desenvolvimento
-    db_engine = os.getenv('ENGINE_DB', 'django.db.backends.postgresql')
-    DATABASES = {
-        'default': {
-            'ENGINE': db_engine,
-            'NAME': validar_env_var('POSTGRES_DB', 'local_db'),
-            'USER': validar_env_var('POSTGRES_USER', 'local_user'),
-            'PASSWORD': validar_env_var('POSTGRES_PASSWORD', 'local_password'),
-            'HOST': validar_env_var('POSTGRES_HOST', 'localhost'),
-            'PORT': validar_env_var('POSTGRES_PORT', '5432'),
-        }
-    }
+DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"), conn_max_age=600)}
 
-# --- REST Framework ---
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -141,7 +100,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# --- Simple JWT ---
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_ACCESS_LIFETIME_MINUTES', '60'))),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=int(os.getenv('JWT_REFRESH_LIFETIME_DAYS', '7'))),
@@ -169,14 +127,12 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-# --- Internacionalização ---
 LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "America/Sao_Paulo"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# --- Static files (WhiteNoise) ---
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
@@ -187,7 +143,6 @@ else:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# --- CORS ---
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
@@ -195,7 +150,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-# --- Minio ---
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "localhost:9000")
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "minioadmin")
@@ -203,7 +157,6 @@ MINIO_BUCKET = os.getenv("MINIO_BUCKET", "media")
 MINIO_SECURE = os.getenv("MINIO_SECURE", "False") == "True"
 MINIO_BASE_URL = os.getenv('MINIO_BASE_URL', f"{'https://' if MINIO_SECURE else 'http://'}{MINIO_ENDPOINT}")
 
-# --- django-allauth ---
 SITE_ID = 1
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'confirm_password*']

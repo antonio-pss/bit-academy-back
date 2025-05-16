@@ -1,11 +1,12 @@
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework import serializers # Para poder levantar ValidationError do DRF
+from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 from .models import User
 from .services import MinioUploaderService
 from .utils import process_social_account_picture
+
 
 class UserActions:
     """Ações relacionadas a usuários."""

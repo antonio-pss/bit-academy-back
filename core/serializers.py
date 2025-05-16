@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import TokenError
-from core import models
-from core import actions
+
+from core import actions, models
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True, max_length=30)
@@ -17,7 +18,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
-
     def create(self, validated_data):
         user = actions.UserActions.create_user(validated_data)
         return user
@@ -26,8 +26,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'email', 'name', 'username', 'xp', 'streak', 'bio', 'avatar', 'is_active', 'date_joined']
+        fields = '__all__'
         read_only_fields = ['email', 'is_active', 'date_joined', 'id', 'xp', 'streak']
+        write_only_fields = ['password']
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -71,6 +72,9 @@ class CustomSocialLoginSerializer(serializers.Serializer):
 class UserAvatarUploadSerializer(serializers.Serializer):
     avatar = serializers.ImageField()
 
+
 class ClassFileUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
     filename = serializers.CharField()
+
+
