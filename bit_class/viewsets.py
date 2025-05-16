@@ -1,8 +1,11 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import action
+
 from bit_class.models import Class
-from .serializers import ClassSerializer
+
 from . import actions
+from .serializers import ClassSerializer
+
 
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()

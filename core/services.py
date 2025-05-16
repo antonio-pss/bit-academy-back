@@ -3,6 +3,7 @@ from typing import BinaryIO, Optional
 from urllib.parse import urlparse
 
 from django.conf import settings
+from django.db import DatabaseError
 from minio import Minio
 from minio.error import S3Error
 
@@ -26,7 +27,7 @@ class MinioUploaderService:
         try:
             if not self.client.bucket_exists(bucket_name):
                 self.client.make_bucket(bucket_name)
-        except S3Error as e:
+        except S3Error:
             # Log ou tratamento de erro
             raise
 

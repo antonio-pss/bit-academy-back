@@ -7,6 +7,7 @@ from .models import User
 from .services import MinioUploaderService
 from .utils import process_social_account_picture
 
+
 class UserActions:
     """Ações relacionadas a usuários."""
 

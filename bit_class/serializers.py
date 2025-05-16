@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from bit_class.models import Class, ClassMember, ClassInvitation, ClassRole
+
+from bit_class.models import Class, ClassInvitation, ClassMember, ClassRole
 
 
 class ClassSerializer(serializers.ModelSerializer):

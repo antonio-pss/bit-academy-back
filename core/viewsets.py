@@ -1,10 +1,11 @@
-from rest_framework import generics, status, permissions, viewsets
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from . import serializers, actions
+
+from . import actions, serializers
 from .models import User
 from .serializers import UserAvatarUploadSerializer
 
@@ -59,7 +60,7 @@ class LogoutViewsets(APIView):
         try:
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Exception as e:
+        except Exception:
             return Response({"detail": "Logout failed."}, status=status.HTTP_400_BAD_REQUEST)
 
 

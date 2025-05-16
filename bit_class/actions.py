@@ -1,8 +1,8 @@
-from django.db import transaction
-
-from bit_class.models import Class, ClassMember, ClassInvitation, ClassRole
-from guardian.shortcuts import assign_perm
 from django.contrib.auth.models import User
+from django.db import transaction
+from guardian.shortcuts import assign_perm
+
+from bit_class.models import ClassInvitation, ClassMember, ClassRole
 
 
 class ClassActions:
@@ -32,8 +32,8 @@ class ClassActions:
 
     @staticmethod
     def invite_user(request, class_obj, serializer_data):
-        from rest_framework.response import Response
         from rest_framework import status
+        from rest_framework.response import Response
         email = serializer_data.get('email')
         role_id = serializer_data.get('role_id')
         user = User.objects.filter(email=email).first()
@@ -52,8 +52,8 @@ class ClassActions:
 
     @staticmethod
     def accept_invitation(request, convite_id):
-        from rest_framework.response import Response
         from rest_framework import status
+        from rest_framework.response import Response
         conv = ClassInvitation.objects.filter(id=convite_id, email=request.user.email).first()
         if conv and not conv.is_accepted:
             conv.is_accepted = True
@@ -68,8 +68,8 @@ class ClassActions:
 
     @staticmethod
     def add_student_link(request, class_obj, email):
-        from rest_framework.response import Response
         from rest_framework import status
+        from rest_framework.response import Response
         user = User.objects.filter(email=email).first()
         if user:
             from bit_class.models import ClassRole
@@ -81,8 +81,8 @@ class ClassActions:
 
     @staticmethod
     def remove_student(request, class_obj, user_id):
-        from rest_framework.response import Response
         from rest_framework import status
+        from rest_framework.response import Response
         member = ClassMember.objects.filter(
             id_class=class_obj, id_user=user_id,
             id_class_role__name='Estudante').first()
