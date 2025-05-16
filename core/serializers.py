@@ -6,10 +6,10 @@ from core import actions, models
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
-    email = serializers.EmailField(required=True)
     name = serializers.CharField(required=True, max_length=30)
+    email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True, max_length=20)
+    password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = models.User
@@ -17,10 +17,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
-
-    def validate(self, attrs):
-        actions.UserActions.validate_password_strength(attrs['password'])
-        return attrs
 
     def create(self, validated_data):
         user = actions.UserActions.create_user(validated_data)
