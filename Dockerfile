@@ -1,21 +1,17 @@
-# Base image
-FROM python:3.13-alpine
+FROM python:3.13-bookworm
 
-# Set environment variables for python
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DJANGO_SETTINGS_MODULE=bit_academy.settings
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements.txt file into the container
-COPY ./requirements.txt .
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Install Python dependecies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the project code into the container
 COPY . .
+RUN chmod +x /app/entrypoint.sh
 
-# Use the entrypoint script as the CMD
-CMD ["/app/entrypoint.sh"]
+EXPOSE 8000
+
+CMD ["sh", "/app/entrypoint.sh"]

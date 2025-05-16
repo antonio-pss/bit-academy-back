@@ -1,20 +1,31 @@
 services:
   web:
-    container_name: "bit-academy"
     build: .
     volumes:
-      - ./:/app
+      - .:/app
     ports:
       - "8000:8000"
     env_file:
-      - .env.development
+      - .env.prod.test
     depends_on:
       - database
+    networks:
+      - backend
 
   database:
-    container_name: "postgres-dev"
-    image: "postgres:16.7-alpine"
+    image: "postgres:16-alpine"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
     env_file:
-      - .env.development
+      - .env.prod.test
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    networks:
+      - backend
+
+volumes:
+  postgres-data:
+
+networks:
+  backend:
+    driver: bridge
