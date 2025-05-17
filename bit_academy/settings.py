@@ -147,6 +147,8 @@ CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
+    "http://18.117.154.106",
+    "http://0.0.0.0:8000",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
