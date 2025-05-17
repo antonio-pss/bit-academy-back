@@ -1,4 +1,5 @@
-from rest_framework import serializers
+from rest_framework import serializers, generics, permissions, status
+from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import TokenError
 
@@ -6,27 +7,17 @@ from core import actions, models
 from core.models import User
 
 
-class RegisterSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
-    name = serializers.CharField(required=True, max_length=30)
-    email = serializers.EmailField(required=True)
-    username = serializers.CharField(required=True, max_length=20)
-    password = serializers.CharField(write_only=True, required=True)
+class RegisterViewsets(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = serializers.RegisterSerializer
 
-    class Meta:
-        model = models.User
-        fields = '__all__'
-        extra_kwargs = {
-            'id': {'read_only': True},
-            'email': {'required': True},
-            'name': {'required': True},
-            'username': {'required': True},
-            'password': {'required': True, 'write_only': True},
-        }
-
-    def create(self, validated_data):
-        user = actions.UserActions.create_user(validated_data)
-        return user
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()  # Cria o usuário
+        user_serializer = serializers.UserSerializer(user)  # Serializa o usuário criado
+        return Response(user_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class UserSerializer(serializers.ModelSerializer):

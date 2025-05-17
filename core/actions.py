@@ -47,7 +47,7 @@ class UserActions:
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
 
-        refresh['id'] = str(user.id)  # UUID precisa ser string
+        refresh['id'] = str(user.id)
         refresh['email'] = user.email
         refresh['name'] = user.name
         refresh['username'] = user.username
