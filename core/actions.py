@@ -1,3 +1,5 @@
+from typing import Dict
+
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
@@ -27,18 +29,35 @@ class UserActions:
 
     @staticmethod
     def create_user(validated_data):
-        """Cria um novo usuário no banco de dados."""
         email = validated_data['email']
         name = validated_data['name']
         username = validated_data['username']
         password = validated_data['password']
         user = User.objects.create_user(
+            id=validated_data.get('id'),
             email=email,
             username=username,
             name=name,
             password=password
         )
         return user
+
+    def get_tokens_for_user(user: User) -> Dict[str, str]:
+        refresh = RefreshToken.for_user(user)
+        access = refresh.access_token
+
+        refresh['id'] = str(user.id)  # UUID precisa ser string
+        refresh['email'] = user.email
+        refresh['name'] = user.name
+        refresh['username'] = user.username
+        refresh['is_active'] = user.is_active
+        refresh['date_joined'] = user.date_joined.isoformat() if user.date_joined else None
+        refresh['avatar'] = user.avatar
+
+        return {
+            'access': str(access),
+            'refresh': str(refresh),
+        }
 
     @staticmethod
     def handle_user_avatar_upload(user, avatar_file):

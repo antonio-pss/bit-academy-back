@@ -8,7 +8,7 @@ urlpatterns = [
     path('auth/signup/', viewsets.RegisterViewsets.as_view(), name='auth_register'),
     path('auth/login/', viewsets.LoginViewsets.as_view(), name='auth_login'),
     path('auth/logout/', viewsets.LogoutViewsets.as_view(), name='auth_logout'),
-    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Rota padrão do simplejwt
-    path('auth/user/', viewsets.UserDetailViewsets.as_view(), name='auth_user_detail'), # Rota para detalhes/update do usuário logado
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/user/<int:pk>/', viewsets.UserDetailViewsets.as_view(), name='auth_user_detail'),
     path('accounts/', include('allauth.urls')),
 ]

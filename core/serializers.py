@@ -7,6 +7,7 @@ from core.models import User
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=True)
     name = serializers.CharField(required=True, max_length=30)
     email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True, max_length=20)
@@ -14,7 +15,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ('email', 'name', 'username', 'password')
+        fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -40,6 +41,24 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, attrs):
+        from django.contrib.auth import authenticate
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if not user:
+            raise serializers.ValidationError('Credenciais inválidas.')
+
+        attrs['user'] = user
+        return attrs
+
+
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField(required=True)
     default_error_messages = {
@@ -60,11 +79,12 @@ class LogoutSerializer(serializers.Serializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'username', 'email']
+        fields = ['id', 'email', 'name', 'username', 'password', 'avatar']
         extra_kwargs = {
-            'email': {'required': False},
-            'name': {'required': False},
-            'username': {'required': False},
+            'email': {'required': True},
+            'name': {'required': True},
+            'username': {'required': True},
+            'password': {'write_only': True},
         }
 
 

@@ -35,9 +35,16 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LoginViewsets(TokenObtainPairView):
-    serializer_class = serializers.CustomTokenObtainPairSerializer
+class LoginViewsets(APIView):
+    serializer_class = serializers.LoginSerializer
     permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        tokens = actions.get_tokens_for_user(user)
+        return Response(tokens)
 
 
 class UserDetailViewsets(generics.RetrieveUpdateAPIView):
