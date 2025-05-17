@@ -49,6 +49,18 @@ class UserDetailViewsets(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+    @action(detail=True, methods=['PUT'], permission_classes=[permissions.IsAuthenticated])
+    def update(self, request, pk=None):
+        user = self.get_object()
+        serializer = serializers.UpdateUserSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            try:
+                update = actions.SocialAccountActions.update(user, serializer.validated_data)
+                return Response(serializers.UserSerializer(update).data)
+            except Exception as e:
+                return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class LogoutViewsets(APIView):
     serializer_class = serializers.LogoutSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -63,6 +75,19 @@ class LogoutViewsets(APIView):
         except Exception:
             return Response({"detail": "Logout failed."}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class DeleteUserViewsets(generics.DestroyAPIView):
+    @action(detail=True, methods=['delete'], permission_classes=[permissions.IsAuthenticated])
+    def delete(self, request, pk=None):
+        serializer = serializers.DeleteUserSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = self.get_object()
+            try:
+                actions.SocialAccountActions.delete_user(user)
+                return Response({'detail': 'Usuário excluído com sucesso.'}, status=status.HTTP_204_NO_CONTENT)
+            except Exception as e:
+                return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Views para Login Social (Placeholder)
 # class GoogleLoginView(APIView):

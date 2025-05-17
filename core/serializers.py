@@ -3,6 +3,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import TokenError
 
 from core import actions, models
+from core.models import User
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -54,6 +55,27 @@ class LogoutSerializer(serializers.Serializer):
             actions.TokenActions.blacklist_token(self.token)
         except TokenError:
             self.fail('bad_token')
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['name', 'username', 'email']
+        extra_kwargs = {
+            'email': {'required': False},
+            'name': {'required': False},
+            'username': {'required': False},
+        }
+
+
+class DeleteUserSerializer(serializers.Serializer):
+
+    def validate(self, data):
+        request = self.context.get('request')
+        user_id = self.context['view'].kwargs.get('pk')
+        if request.user.id != int(user_id):
+            raise serializers.ValidationError('Permissão negada.')
+        return data
 
 
 class CustomSocialLoginSerializer(serializers.Serializer):

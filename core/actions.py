@@ -88,3 +88,14 @@ class SocialAccountActions:
             return login.user
         else:
             raise serializers.ValidationError("Social login data is missing.")
+
+    @staticmethod
+    def update(user, validated_data):
+        for attr, value in validated_data.items():
+            setattr(user, attr, value)
+        user.save()
+        return user
+
+    @staticmethod
+    def delete_user(user):
+        user.delete()
