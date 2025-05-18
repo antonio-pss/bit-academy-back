@@ -7,7 +7,7 @@ from core.managers import UserManager
 
 class ModelBase(models.Model):
     id = models.AutoField(
-        db_column='id_model',
+        db_column='id',
         primary_key=True,
         blank=False,
         null=False,

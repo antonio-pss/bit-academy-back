@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from rest_framework import serializers, generics, permissions, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -7,25 +9,28 @@ from core import actions, models
 from core.models import User
 
 
-class RegisterViewsets(generics.CreateAPIView):
-    queryset = User.objects.all()
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = serializers.RegisterSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()  # Cria o usuário
-        user_serializer = serializers.UserSerializer(user)  # Serializa o usuário criado
-        return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ['id', 'email', 'name', 'username', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+    
+    def create(self, validated_data):
+        return actions.UserActions.create_user(validated_data)
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = '__all__'
-        read_only = ['email', 'is_active', 'date_joined', 'id', 'xp', 'streak']
+        fields = ['id', 'email', 'name', 'username', 'password', 'avatar', 'is_active', 'date_joined', 'xp', 'streak']
+        read_only = ['id', 'email', 'is_active', 'date_joined', 'xp', 'streak']
         write_only_fields = ['password']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'avatar': {'required': False},
+        }
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -81,6 +86,14 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             'username': {'required': True},
             'password': {'write_only': True},
         }
+
+    def update(self, instance, validated_data):
+        validated_data.pop('id', None)
+        validated_data.pop('is_active', None)
+        validated_data.pop('date_joined', None)
+        validated_data.pop('xp', None)
+        validated_data.pop('streak', None)
+        return actions.UserActions.update(instance, validated_data)
 
 
 class DeleteUserSerializer(serializers.Serializer):

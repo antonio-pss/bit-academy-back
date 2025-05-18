@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Any, Optional, BinaryIO
 
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -12,12 +12,8 @@ from .utils import process_social_account_picture
 
 class UserActions:
     """Ações relacionadas a usuários."""
-
-    @staticmethod
-    def validate_password_match(password, confirm_password):
-        """Verifica se as duas senhas fornecidas são iguais."""
-        if password != confirm_password:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+    def __init__(self, minio_uploader: MinioUploaderService):
+        self.minio = minio_uploader
 
     @staticmethod
     def validate_password_strength(password):
@@ -35,12 +31,31 @@ class UserActions:
         username = validated_data['username']
         password = validated_data['password']
         user = User.objects.create_user(
-            id=validated_data.get('id'),
+            id=id,
             email=email,
             username=username,
             name=name,
             password=password
         )
+        return user
+
+    @staticmethod
+    def update(self, user: User, user_data: Dict[str, Any], avatar: Optional[BinaryIO] = None) -> User:
+        user_data.pop('id', None)
+        user_data.pop('modified', None)
+        user_data.pop('created_at', None)
+        user_data.pop('is_active', None)
+        user_data.pop('xp', None)
+        user_data.pop('streak', None)
+
+        if avatar:
+            user_data['avatar'] = self.minio.handle_avatar_upload(avatar, getattr(user, 'avatar', None))
+
+        for attr, value in user_data.items():
+            if hasattr(user, attr):
+                setattr(user, attr, value)
+
+        user.save(update_fields=[*user_data.keys(), 'modified']) # Salva apenas os campos atualizados
         return user
 
     def get_tokens_for_user(user: User) -> Dict[str, str]:
