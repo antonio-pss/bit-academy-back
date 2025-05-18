@@ -28,6 +28,12 @@ class UserSerializer(serializers.ModelSerializer):
             'avatar': {'required': False},
         }
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if 'id' not in data:
+            data['id'] = instance.pk
+        return data
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
