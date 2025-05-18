@@ -23,7 +23,7 @@ class RegisterViewsets(generics.CreateAPIView):
             name=validated_data['name'],
             password=validated_data['password']
         )
-        return Response(user.data, status=status.HTTP_201_CREATED)
+        return Response(user, status=status.HTTP_201_CREATED)
 
 
 class UserViewSet(viewsets.ModelViewSet):
