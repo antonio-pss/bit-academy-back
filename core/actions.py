@@ -67,7 +67,7 @@ class UserActions:
         refresh['name'] = user.name
         refresh['username'] = user.username
         refresh['is_active'] = user.is_active
-        refresh['date_joined'] = user.date_joined.isoformat() if user.date_joined else None
+        refresh['created'] = user.created.isoformat() if user.created else None
         refresh['avatar'] = user.avatar
 
         return {

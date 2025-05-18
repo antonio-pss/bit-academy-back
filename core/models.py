@@ -73,6 +73,7 @@ class User(ModelBase, AbstractUser):
     )
     bio = models.TextField(
         db_column="tx_bio",
+        max_length=300,
         blank=True,
         null=True,
     )

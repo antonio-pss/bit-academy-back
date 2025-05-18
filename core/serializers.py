@@ -1,7 +1,4 @@
-from typing import Dict, Any
-
-from rest_framework import serializers, generics, permissions, status
-from rest_framework.response import Response
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import TokenError
 
@@ -89,7 +86,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop('id', None)
         validated_data.pop('is_active', None)
-        validated_data.pop('date_joined', None)
+        validated_data.pop('created', None)
         validated_data.pop('xp', None)
         validated_data.pop('streak', None)
         return actions.UserActions.update(instance, validated_data)
