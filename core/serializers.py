@@ -12,7 +12,7 @@ from core.models import User
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'email', 'name', 'username', 'password']
+        fields = ['email', 'name', 'username', 'password']
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -25,8 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ['id', 'email', 'name', 'username', 'password', 'avatar', 'is_active', 'created', 'xp', 'streak']
-        read_only_fields = ['id', 'email', 'is_active', 'created', 'xp', 'streak']
-        write_only_fields = ['password']
+        read_only_fields = ['id', 'is_active', 'created', 'xp', 'streak']
         extra_kwargs = {
             'password': {'write_only': True},
             'avatar': {'required': False},

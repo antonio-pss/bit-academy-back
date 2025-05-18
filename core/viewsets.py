@@ -16,13 +16,14 @@ class RegisterViewsets(generics.CreateAPIView):
     serializer_class = serializers.RegisterSerializer  # Você precisa criar este serializer
 
     @action(detail=False, methods=['post'])
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        # Usar UserSerializer para a resposta, incluindo o id
-        response_serializer = serializers.UserSerializer(user)
-        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+    def create_user(validated_data):
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            username=validated_data['username'],
+            name=validated_data['name'],
+            password=validated_data['password']
+        )
+        return Response(user.data, status=status.HTTP_201_CREATED)
 
 
 class UserViewSet(viewsets.ModelViewSet):
