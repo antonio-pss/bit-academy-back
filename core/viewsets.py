@@ -7,18 +7,27 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from . import actions, serializers
 from .models import User
-from .serializers import UserAvatarUploadSerializer
+from .serializers import UserAvatarUploadSerializer, UserSerializer
 
 
 class RegisterViewsets(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (permissions.AllowAny,)
-    serializer_class = serializers.RegisterSerializer
+    serializer_class = serializers.RegisterSerializer  # Você precisa criar este serializer
+
+    @action(detail=False, methods=['post'])
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        # Usar UserSerializer para a resposta, incluindo o id
+        response_serializer = serializers.UserSerializer(user)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    # serializer_class = UserSerializer  # seu serializador de usuários
+    serializer_class = UserSerializer
     parser_classes = [MultiPartParser]
 
     @action(detail=True, methods=['POST'])

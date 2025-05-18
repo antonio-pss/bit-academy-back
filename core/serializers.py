@@ -16,7 +16,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
-    
+
     def create(self, validated_data):
         return actions.UserActions.create_user(validated_data)
 
@@ -24,8 +24,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'email', 'name', 'username', 'password', 'avatar', 'is_active', 'date_joined', 'xp', 'streak']
-        read_only = ['id', 'email', 'is_active', 'date_joined', 'xp', 'streak']
+        fields = ['id', 'email', 'name', 'username', 'password', 'avatar', 'is_active', 'created', 'xp', 'streak']
+        read_only_fields = ['id', 'email', 'is_active', 'created', 'xp', 'streak']
         write_only_fields = ['password']
         extra_kwargs = {
             'password': {'write_only': True},
