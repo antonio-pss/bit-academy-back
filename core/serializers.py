@@ -6,23 +6,26 @@ from core import actions, models
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.User
-        fields = ['email', 'name', 'username', 'password']
-        read_only_fields = ['id', 'created', 'is_active']
+        fields = ['id', 'email', 'name', 'username', 'password']
+        read_only_fields = ['id']
         extra_kwargs = {
             'password': {'write_only': True},
         }
 
     def create(self, validated_data):
-        return actions.UserActions.create_user(validated_data)
+        user = actions.UserActions.create_user(validated_data)
+        return user
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'email', 'name', 'username', 'password', 'avatar', 'is_active', 'created', 'xp', 'streak']
-
+        fields = ['id', 'email', 'name', 'username', 'password', 'avatar', 'bio', 'is_active', 'created', 'xp', 'streak']
+        read_only_fields = ['id', 'is_active', 'created', 'xp', 'streak']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

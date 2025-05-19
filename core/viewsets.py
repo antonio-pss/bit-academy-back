@@ -12,10 +12,12 @@ class RegisterViewsets(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.RegisterSerializer
 
-    @action(detail=False, methods=['post'])
-    def create_user(validated_data):
-        return Response(actions.UserActions.create_user(validated_data), status=status.HTTP_201_CREATED)
-
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        response_serializer = serializers.UserSerializer(user)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = models.User.objects.all()

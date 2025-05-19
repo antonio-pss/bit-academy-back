@@ -37,7 +37,7 @@ class ModelBase(models.Model):
 
 class User(ModelBase, AbstractUser):
     username = models.CharField(
-        MinLengthValidator(6),
+        validators=[MinLengthValidator(6)],
         max_length=12,
         unique=True,
         blank=False,
@@ -55,7 +55,7 @@ class User(ModelBase, AbstractUser):
         null=False,
     )
     password = models.CharField(
-        MinLengthValidator(8),
+        validators=[MinLengthValidator(8)],
         blank=False,
         null=False,
     )

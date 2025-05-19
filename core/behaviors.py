@@ -18,8 +18,7 @@ class MinioStorageBehavior:
 
     def get_storage_service(self):
         """
-        Returns:
-            AvatarStorageInterface: Instância do serviço de armazenamento
+        Instância do serviço de armazenamento
         """
         minio_client = Minio(
             settings.MINIO_ENDPOINT,

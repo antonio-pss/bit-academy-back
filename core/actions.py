@@ -25,13 +25,11 @@ class UserActions:
 
     @staticmethod
     def create_user(validated_data):
-        id = validated_data.get('id')
         email = validated_data['email']
         name = validated_data['name']
         username = validated_data['username']
         password = validated_data['password']
         user = User.objects.create_user(
-            id=id,
             email=email,
             username=username,
             name=name,
