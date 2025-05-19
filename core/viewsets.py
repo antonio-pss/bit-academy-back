@@ -46,7 +46,7 @@ class LoginViewsets(APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        tokens = actions.get_tokens_for_user(user)
+        tokens = actions.UserActions.get_tokens_for_user(user)
         return Response(tokens)
 
 
@@ -65,7 +65,7 @@ class UserDetailViewsets(generics.RetrieveUpdateAPIView):
         serializer = serializers.UpdateUserSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             try:
-                update = actions.SocialAccountActions.update(user, serializer.validated_data)
+                update = actions.UserActions.update(user, serializer.validated_data)
                 return Response(serializers.UserSerializer(update).data)
             except Exception as e:
                 return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -105,13 +105,11 @@ class DeleteUserViewsets(generics.DestroyAPIView):
 #     serializer_class = serializers.CustomSocialLoginSerializer # Ou talvez nenhum serializer aqui
 #
 #     def post(self, request, *args, **kwargs):
-#         # ... lógica complexa de interação com Google e allauth ...
-#         pass # Implementar
+#         # Implementar lógica de interação com Github e allauth ...
 
 # class GithubLoginView(APIView):
 #     permission_classes = [permissions.AllowAny]
 #     serializer_class = serializers.CustomSocialLoginSerializer # Ou talvez nenhum serializer aqui
 #
 #     def post(self, request, *args, **kwargs):
-#         # ... lógica complexa de interação com Github e allauth ...
-#         pass # Implementar
+#         # Implementar lógica de interação com Github e allauth ...

@@ -56,6 +56,7 @@ class UserActions:
         user.save(update_fields=[*user_data.keys(), 'modified']) # Salva apenas os campos atualizados
         return user
 
+    @staticmethod
     def get_tokens_for_user(user: User) -> Dict[str, str]:
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
@@ -67,6 +68,10 @@ class UserActions:
         refresh['is_active'] = user.is_active
         refresh['created'] = user.created.isoformat() if user.created else None
         refresh['avatar'] = user.avatar
+        refresh['xp'] = user.xp
+        refresh['streak'] = user.streak
+        refresh['modified'] = user.modified.isoformat() if user.modified else None
+        refresh['bio'] = user.bio
 
         return {
             'access': str(access),

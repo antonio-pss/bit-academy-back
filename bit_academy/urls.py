@@ -19,10 +19,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('core.urls')),
-    # path('api/bit_class', include('bit_class.urls')),
-    # path('api/bit_notes', include('bit_notes.urls')),
-    # path('api/bit_school', include('bit_school.urls')),
+    path('core/', include('core.urls')),
+    path('class/', include('bit_class.urls')),
+    # path('notes', include('bit_notes.urls')),
+    path('school/', include('bit_school.urls')),
     path('docs/', include([
         path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

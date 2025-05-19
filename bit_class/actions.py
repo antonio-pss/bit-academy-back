@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from guardian.shortcuts import assign_perm
 
@@ -11,7 +12,7 @@ class ClassActions:
     @transaction.atomic
     def perform_create(serializer, request_user):
         instance = serializer.save()
-        role, _ = ClassRole.objects.get_or_create(defaults={'role': 'TCHR'})[0]
+        role, created = ClassRole.objects.get_or_create(defaults={'role': 'TCHR'})
         ClassMember.objects.create(
             id_class=instance,
             id_user=request_user,
@@ -65,6 +66,15 @@ class ClassActions:
             )
             return Response({"detail": "Convite aceito."})
         return Response({"error": "Convite inválido ou já aceito."}, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def delete_invitation_by_email(email):
+        try:
+            invitation = ClassInvitation.objects.get(email=email)
+            invitation.delete()
+            return {"detail": f"Convite para o email {email} foi excluído com sucesso."}
+        except ObjectDoesNotExist:
+            return {"detail": f"Convite com email {email} não encontrado."}
 
     @staticmethod
     def add_student_link(request, class_obj, email):

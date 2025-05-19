@@ -4,17 +4,22 @@ from bit_school.models import CourseModuleDiscipline
 from core.models import ModelBase, User
 
 
-class Class(ModelBase):
+class Class(ModelBase, models.Model):
     name = models.CharField(max_length=50, db_column="tx_name", )
     description = models.TextField(db_column="tx_description", )
-    id_course_module_discipline = models.ForeignKey(CourseModuleDiscipline, db_column="fk_course_module_discipline", on_delete=models.CASCADE)
+    id_course_module_discipline = models.ForeignKey(
+        CourseModuleDiscipline,
+        db_column="fk_course_module_discipline",
+        on_delete=models.CASCADE,
+        default=1, #ID sem vinculo institucional
+    )
 
     class Meta:
         managed = True
         db_table = 'class'
 
 
-class ClassRole(ModelBase):
+class ClassRole(ModelBase, models.Model):
     ROLE_CHOICES = (
         ('TCHR', 'Teacher'),
         ('STD', 'Student'),
@@ -36,7 +41,7 @@ class ClassRole(ModelBase):
         db_table = 'class_role'
 
 
-class ClassMember(ModelBase):
+class ClassMember(ModelBase, models.Model):
     id_class_role = models.ForeignKey(ClassRole, db_column="fk_class_role", on_delete=models.CASCADE)
     id_class = models.ForeignKey(Class, db_column="fk_class", on_delete=models.CASCADE)
     id_user = models.ForeignKey(User, db_column="fk_user", on_delete=models.CASCADE)
@@ -46,7 +51,7 @@ class ClassMember(ModelBase):
         db_table = 'class_member'
 
 
-class Frequency(ModelBase):
+class Frequency(ModelBase, models.Model):
     id_class_member = models.ForeignKey(ClassMember, db_column="fk_class_member", on_delete=models.CASCADE)
     day = models.DateField(db_column="dt_day", )
 
@@ -55,7 +60,7 @@ class Frequency(ModelBase):
         db_table = 'frequency'
 
 
-class Status(ModelBase):
+class Status(ModelBase, models.Model):
     name = models.CharField(max_length=50, db_column="tx_name", )
 
     class Meta:
@@ -63,7 +68,7 @@ class Status(ModelBase):
         db_table = 'status'
 
 
-class Time(ModelBase):
+class Time(ModelBase, models.Model):
     id_frequency = models.ForeignKey(Frequency, db_column="fk_frequency", on_delete=models.CASCADE)
     id_status = models.ForeignKey(Status, db_column="fk_status", on_delete=models.CASCADE)
     start_hour = models.DateTimeField(db_column="dt_start_hour", )
@@ -74,7 +79,7 @@ class Time(ModelBase):
         db_table = 'time'
 
 
-class Activity(ModelBase):
+class Activity(ModelBase, models.Model):
     title = models.CharField(max_length=50, db_column="tx_title", )
     description = models.TextField(db_column="tx_description", )
     limit_date = models.DateField(db_column="dt_limit_date", )
@@ -84,7 +89,7 @@ class Activity(ModelBase):
         db_table = 'activity'
 
 
-class TaskSubmission(ModelBase):
+class TaskSubmission(ModelBase, models.Model):
     id_activity = models.ForeignKey(
         Activity,
         db_column="fk_activity",
@@ -115,7 +120,7 @@ class TaskSubmission(ModelBase):
         db_table = 'task_submission'
 
 
-class Grade(ModelBase):
+class Grade(ModelBase, models.Model):
     score = models.IntegerField(
         db_column="nb_score",
         blank=False,
@@ -134,7 +139,7 @@ class Grade(ModelBase):
         db_table = 'grade'
 
 
-class ClassInvitation(ModelBase):
+class ClassInvitation(ModelBase, models.Model):
     email = models.EmailField(db_column='tx_email')
     id_class = models.ForeignKey(
         'Class',
