@@ -22,19 +22,27 @@ class ClassViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def accept_invite(self, request, pk=None):
         invite_id = request.data.get('invite_id')
-        return actions.ClassActions.accept_invite(request, invite_id)
+        return actions.ClassActions.accept_invitation(request, invite_id)
 
     @action(detail=True, methods=['post'])
     def add_student_via_link(self, request, pk=None):
         class_obj = self.get_object()
         email = request.data.get('email')
-        return actions.ClassActions.add_student_via_link(request, class_obj, email)
+        return actions.ClassActions.add_student_link(request, class_obj, email)
 
     @action(detail=True, methods=['delete'])
     def remove_student(self, request, pk=None):
         class_obj = self.get_object()
         user_id = request.data.get('user_id')
         return actions.ClassActions.remove_student(request, class_obj, user_id)
+
+    @action(detail=True, methods=['post'])
+    def toggle_active(self, request, pk=None):
+        role = self.get_object()
+        role.is_active = not role.is_active
+        role.save()
+        return Response({'status': 'toggled', 'is_active': role.is_active})
+
 
 class ClassMemberViewSet(viewsets.ModelViewSet):
     queryset = models.ClassMember.objects.all()
@@ -47,6 +55,7 @@ class ClassMemberViewSet(viewsets.ModelViewSet):
         if class_id:
             queryset = queryset.filter(id_class=class_id)
         return queryset
+
 
 class ClassInvitationViewSet(viewsets.ModelViewSet):
     queryset = models.ClassInvitation.objects.all()
@@ -74,13 +83,9 @@ class ClassInvitationViewSet(viewsets.ModelViewSet):
             return actions.ClassActions.accept_invitation(serializer.validated_data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ClassRoleViewSet(viewsets.ModelViewSet):
-    queryset = models.ClassRole.objects.all()
-    serializer_class = serializers.ClassRoleSerializer
-
-    @action(detail=True, methods=['post'])
-    def toggle_active(self, request, pk=None):
-        role = self.get_object()
-        role.is_active = not role.is_active
-        role.save()
-        return Response({ 'status': 'toggled', 'is_active': role.is_active })
+    @action(detail=False, methods=['post'])
+    def decline_invitation(self, request):
+        serializer = serializers.ClassInvitationResponseSerializer(data=request.data)
+        if serializer.is_valid():
+            return actions.ClassActions.decline_invitation(serializer.validated_data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

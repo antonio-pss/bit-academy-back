@@ -107,6 +107,7 @@ class TaskSubmissionSerializer(serializers.ModelSerializer):
         model = TaskSubmission
         fields = '__all__'
 
+
 class GradeSerializer(serializers.ModelSerializer):
     id_task_submission = TaskSubmissionSerializer(read_only=True)
     score = serializers.IntegerField()
