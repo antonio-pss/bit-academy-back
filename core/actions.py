@@ -6,13 +6,13 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 from .models import User
-from .services import MinioUploaderService
+from .behaviors import MinioStorageBehavior
 from .utils import process_social_account_picture
 
 
 class UserActions:
     """Ações relacionadas a usuários."""
-    def __init__(self, minio_uploader: MinioUploaderService):
+    def __init__(self, minio_uploader: MinioStorageBehavior):
         self.minio = minio_uploader
 
     @staticmethod
@@ -77,8 +77,12 @@ class UserActions:
 
     @staticmethod
     def handle_user_avatar_upload(user, avatar_file):
-        minio_service = MinioUploaderService()
-        avatar_url = minio_service.handle_avatar_upload(avatar_file, avatar_file.name, getattr(user, 'avatar', None))
+        minio_service = MinioStorageBehavior()
+        avatar_url = minio_service.run(
+            avatar_file,
+            avatar_file.name,
+            getattr(user, 'avatar', None)
+        )
         user.avatar = avatar_url
         user.save(update_fields=['avatar'])
         return avatar_url

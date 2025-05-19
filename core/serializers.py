@@ -3,13 +3,14 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import TokenError
 
 from core import actions, models
-from core.models import User
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.User
         fields = ['email', 'name', 'username', 'password']
+        read_only_fields = ['id', 'created', 'is_active']
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -17,22 +18,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return actions.UserActions.create_user(validated_data)
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ['id', 'email', 'name', 'username', 'password', 'avatar', 'is_active', 'created', 'xp', 'streak']
-        read_only_fields = ['id', 'is_active', 'created', 'xp', 'streak']
-        extra_kwargs = {
-            'password': {'write_only': True},
-            'avatar': {'required': False},
-        }
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        if 'id' not in data:
-            data['id'] = instance.pk
-        return data
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -80,7 +69,7 @@ class LogoutSerializer(serializers.Serializer):
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = models.User
         fields = ['id', 'email', 'name', 'username', 'password', 'avatar']
         extra_kwargs = {
             'email': {'required': True},

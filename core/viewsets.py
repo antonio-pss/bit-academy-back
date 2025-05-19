@@ -3,38 +3,29 @@ from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.views import TokenObtainPairView
 
-from . import actions, serializers
-from .models import User
-from .serializers import UserAvatarUploadSerializer, UserSerializer
+from core import actions, serializers, models
 
 
 class RegisterViewsets(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = models.User.objects.all()
     permission_classes = (permissions.AllowAny,)
-    serializer_class = serializers.RegisterSerializer  # Você precisa criar este serializer
+    serializer_class = serializers.RegisterSerializer
 
     @action(detail=False, methods=['post'])
     def create_user(validated_data):
-        user = User.objects.create_user(
-            email=validated_data['email'],
-            username=validated_data['username'],
-            name=validated_data['name'],
-            password=validated_data['password']
-        )
-        return Response(user, status=status.HTTP_201_CREATED)
+        return Response(actions.UserActions.create_user(validated_data), status=status.HTTP_201_CREATED)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = models.User.objects.all()
+    serializer_class = serializers.UserSerializer
     parser_classes = [MultiPartParser]
 
     @action(detail=True, methods=['POST'])
     def upload_avatar(self, request, pk=None):
         user = self.get_object()
-        serializer = UserAvatarUploadSerializer(data=request.data)
+        serializer = serializers.UserAvatarUploadSerializer(data=request.data)
         if serializer.is_valid():
             avatar_file = serializer.validated_data['avatar']
             try:
@@ -58,7 +49,7 @@ class LoginViewsets(APIView):
 
 
 class UserDetailViewsets(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
+    queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
