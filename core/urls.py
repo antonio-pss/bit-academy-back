@@ -9,6 +9,6 @@ urlpatterns = [
     path('login/', viewsets.LoginViewsets.as_view(), name='auth_login'),
     path('logout/', viewsets.LogoutViewsets.as_view(), name='auth_logout'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('auser/<int:pk>/', viewsets.UserDetailViewsets.as_view(), name='auth_user_detail'),
+    path('user/<int:pk>/', viewsets.UserDetailViewsets.as_view(), name='auth_user_detail'),
     path('accounts/', include('allauth.urls')),
 ]

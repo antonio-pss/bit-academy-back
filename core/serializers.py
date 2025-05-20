@@ -39,18 +39,22 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
+    INVALID_CREDENTIALS_ERROR = 'Credenciais inválidas.'
+
     def validate(self, attrs):
-        from django.contrib.auth import authenticate
-        email = attrs.get('username')
-        password = attrs.get('password')
-
-        user = authenticate(username=email, password=password)
-
+        """Valida as credenciais do usuário."""
+        user = self.validate_credentials(attrs.get('email'), attrs.get('password'))
         if not user:
-            raise serializers.ValidationError('Credenciais inválidas.')
-
+            raise serializers.ValidationError(self.INVALID_CREDENTIALS_ERROR)
         attrs['user'] = user
         return attrs
+
+    @staticmethod
+    def validate_credentials(email, password):
+        """Autentica o usuário com base nas credenciais fornecidas."""
+        from django.contrib.auth import authenticate
+        return authenticate(username=email, password=password)
+
 
 
 class LogoutSerializer(serializers.Serializer):
