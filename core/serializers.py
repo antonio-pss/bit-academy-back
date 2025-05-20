@@ -36,15 +36,15 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
+    email = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
     def validate(self, attrs):
         from django.contrib.auth import authenticate
-        username = attrs.get('username')
+        email = attrs.get('username')
         password = attrs.get('password')
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(username=email, password=password)
 
         if not user:
             raise serializers.ValidationError('Credenciais inválidas.')

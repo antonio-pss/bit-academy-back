@@ -75,6 +75,10 @@ class FrequencySerializer(serializers.ModelSerializer):
         model = Frequency
         fields = '__all__'
 
+    expandable_fields = {
+        'id_class_member': ('ClassMemberSerializer', {'fields': ['id', 'id_class', 'id_user']}),
+    }
+
 
 class StatusSerializer(serializers.ModelSerializer):
     class Meta:
