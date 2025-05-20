@@ -9,13 +9,7 @@ from core.models import User
 def create_superuser(apps, schema_editor):
     User.objects.create_superuser(
         email='admin@admin_teste.com',
-        username='admin',
         password='admin_teste',
-        name='Caba de Teste Admin',
-        is_active=True,
-        is_superuser=True,
-        is_staff=True,
-
     )
 
 class Migration(migrations.Migration):
@@ -23,7 +17,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('core', '0004_alter_user_password_alter_user_username'),
     ]
-
 
     operations = [
         migrations.RunPython(create_superuser),
