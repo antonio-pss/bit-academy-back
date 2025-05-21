@@ -105,11 +105,11 @@ class DeleteUserViewsets(generics.DestroyAPIView):
 #     serializer_class = serializers.CustomSocialLoginSerializer # Ou talvez nenhum serializer aqui
 #
 #     def post(self, request, *args, **kwargs):
-#         # Implementar lógica de interação com Github e allauth ...
+#         # Implementar lógica de interação com Google e allauth ...
 
 # class GithubLoginView(APIView):
 #     permission_classes = [permissions.AllowAny]
 #     serializer_class = serializers.CustomSocialLoginSerializer # Ou talvez nenhum serializer aqui
 #
 #     def post(self, request, *args, **kwargs):
-#         # Implementar lógica de interação com Github e allauth ...
+#         # Implementar lógica de interação com Github ...

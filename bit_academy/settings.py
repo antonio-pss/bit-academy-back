@@ -123,7 +123,7 @@ SIMPLE_JWT = {
     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
     'JTI_CLAIM': 'jti',
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=150),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=15),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
@@ -144,12 +144,17 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = DEBUG
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
     "http://18.117.154.106",
+    "http://18.117.154.106:8000",
+    "http://18.117.154.106:80",
     "http://0.0.0.0:8000",
+    "http://0.0.0.0:80",
 ]
+
 CORS_ALLOW_CREDENTIALS = True
 
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "localhost:9000")
