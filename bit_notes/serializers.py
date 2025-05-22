@@ -8,7 +8,7 @@ class NoteSerializer(serializers.ModelSerializer):
         many = True,
         required = False,
         view_name = 'note-detail',
-        queryset = Note.objects.all(),
+        queryset = NoteContent.objects.all(),
     )
 
     class Meta:
