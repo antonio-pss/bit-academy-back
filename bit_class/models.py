@@ -11,7 +11,7 @@ class Class(ModelBase, models.Model):
         CourseModuleDiscipline,
         db_column="fk_course_module_discipline",
         on_delete=models.CASCADE,
-        default=1, #ID sem vinculo institucional
+        null=True, #ID sem vinculo institucional
     )
 
     class Meta:

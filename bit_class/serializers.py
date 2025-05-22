@@ -42,20 +42,38 @@ class AssignRoleSerializer(serializers.Serializer):
     email = serializers.EmailField()
     role_id = serializers.PrimaryKeyRelatedField(queryset=ClassRole.objects.all())
 
+    expandable_fields = {
+        'role_id': ('ClassRoleSerializer', {'fields': ['id', 'role']}),
+    }
+
 
 class ClassRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassRole
-        fields = ['id', 'role', 'created', 'modified', 'is_active']
+        fields = ['id', 'role', 'created', 'modified']
 
 
 class ClassInvitationResponseSerializer(serializers.Serializer):
     email = serializers.EmailField()
     is_accepted = serializers.BooleanField()
 
+    class Meta:
+        model = ClassInvitation
+        fields = ['email', 'is_accepted']
+
+    expandable_fields = {
+        'id_class': ('ClassSerializer', {'fields': ['id', 'name']}),
+        'id_class_role': ('ClassRoleSerializer', {'fields': ['id', 'role']}),
+        'id_user': ('core.UserSerializer', {'fields': ['id', 'email', 'username']}),
+    }
+
 
 class ClassInvitationDeleteSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+    class Meta:
+        model = ClassInvitation
+        fields = ['email']
 
 
 class ClassInvitationAcceptSerializer(serializers.Serializer):
