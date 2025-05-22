@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     "core",
     "bit_class",
-    "bit_notes",
     "bit_school",
 ]
 
