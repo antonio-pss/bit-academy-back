@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "core",
     "bit_class",
     "bit_school",
+    "guardian",
 ]
 
 MIDDLEWARE = [
