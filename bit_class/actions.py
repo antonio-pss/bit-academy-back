@@ -22,6 +22,7 @@ class ClassActions:
         )
         # Permissions
         # implementar regra para caso de: se o usuário que possua o atributo 'role' da sala de aula como 'TCHR' ou PRIN, queira sair da sala, obrigatoriamente selecionar outro usuário para ser professor se não houver nenhum outro usuário 'TCHR' ou 'PRIN'.
+        assign_perm('perform_create', request_user, instance)
         assign_perm('delete_class', request_user, instance)
         assign_perm('invite_user', request_user, instance)
         assign_perm('accept_invitation', request_user, instance)
