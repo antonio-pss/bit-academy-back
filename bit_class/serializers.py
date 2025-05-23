@@ -8,7 +8,7 @@ from core.models import User
 class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
-        fields = ['id', 'name', 'description', 'id_course_module_discipline']
+        fields = ['id', 'name', 'description']
 
     expandable_fields = {
         'id_course_module_discipline': ('CourseModuleDisciplineSerializer', {'fields': ['id', 'url', 'name']}),

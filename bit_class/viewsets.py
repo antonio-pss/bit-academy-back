@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ class ClassViewSet(viewsets.ModelViewSet):
     queryset = models.Class.objects.all()
     serializer_class = serializers.ClassSerializer
 
+    @login_required
     def perform_create(self, serializer):
         actions.ClassActions.perform_create(serializer, self.request.user)
 
