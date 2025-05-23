@@ -9,9 +9,9 @@ class Class(ModelBase, models.Model):
     description = models.TextField(db_column="tx_description", )
     id_course_module_discipline = models.ForeignKey(
         CourseModuleDiscipline,
+        null=True,
         db_column="fk_course_module_discipline",
         on_delete=models.CASCADE,
-        null=True, #ID sem vinculo institucional
     )
 
     class Meta:

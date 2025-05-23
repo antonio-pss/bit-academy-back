@@ -8,6 +8,7 @@ from core.models import User
 
 def create_superuser(apps, schema_editor):
     User.objects.create_superuser(
+        username='admin',
         email='admin@adminteste.com',
         password='admin_teste',
     )
