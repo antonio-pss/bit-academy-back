@@ -18,7 +18,6 @@ class ClassActions:
     @staticmethod
     @transaction.atomic
     def perform_create(serializer, request_user):
-        # Valida a permissão antes de criar
         PermissionUtils.has_permissions(request_user, None, ['add_class'])
         instance = serializer.save()
         role, created = ClassRole.objects.get_or_create(role='TCHR')
@@ -27,9 +26,8 @@ class ClassActions:
             id_user=request_user,
             id_class_role=role
         )
-        # Atribui permissões padrão
         perm_list = [
-            'perform_create', 'delete_class', 'invite_user', 'accept_invitation',
+            'add_class','perform_create', 'delete_class', 'invite_user', 'accept_invitation',
             'decline_invitation', 'add_student_link', 'remove_student', 'delete_invitation_by_email'
         ]
         for perm in perm_list:
